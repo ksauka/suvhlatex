@@ -7,7 +7,7 @@ VERSION="${SUVHLATEX_VERSION:-$(sed -n 's/^version = "\([^"]*\)"/\1/p' "$ROOT_DI
 PACKAGE_ROOT="$DIST_DIR/suvhlatex-deb"
 
 rm -rf "$PACKAGE_ROOT"
-mkdir -p "$PACKAGE_ROOT/DEBIAN" "$PACKAGE_ROOT/opt/suvhlatex/web" "$PACKAGE_ROOT/usr/bin" "$PACKAGE_ROOT/usr/share/applications"
+mkdir -p "$PACKAGE_ROOT/DEBIAN" "$PACKAGE_ROOT/opt/suvhlatex/web" "$PACKAGE_ROOT/usr/bin" "$PACKAGE_ROOT/usr/share/applications" "$PACKAGE_ROOT/usr/share/icons/hicolor/scalable/apps"
 
 install -m 644 "$ROOT_DIR/server.py" "$PACKAGE_ROOT/opt/suvhlatex/server.py"
 install -m 644 "$ROOT_DIR/pyproject.toml" "$PACKAGE_ROOT/opt/suvhlatex/pyproject.toml"
@@ -15,6 +15,7 @@ cp -a "$ROOT_DIR/web/." "$PACKAGE_ROOT/opt/suvhlatex/web/"
 install -m 755 "$ROOT_DIR/packaging/installed-launcher.sh" "$PACKAGE_ROOT/opt/suvhlatex/installed-launcher.sh"
 install -m 755 "$ROOT_DIR/packaging/installed-launcher.sh" "$PACKAGE_ROOT/usr/bin/suvhlatex"
 install -m 644 "$ROOT_DIR/packaging/suvhlatex.desktop" "$PACKAGE_ROOT/usr/share/applications/suvhlatex.desktop"
+install -m 644 "$ROOT_DIR/packaging/suvhlatex.svg" "$PACKAGE_ROOT/usr/share/icons/hicolor/scalable/apps/suvhlatex.svg"
 
 cat > "$PACKAGE_ROOT/DEBIAN/control" <<CONTROL
 Package: suvhlatex
