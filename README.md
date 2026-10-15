@@ -44,7 +44,7 @@ The launcher starts the local server and opens the web app in your browser. No a
 
 ## Build downloadable Linux releases
 
-The repository includes builders for an Ubuntu/Debian package and an AppImage:
+The repository includes builders for an Ubuntu/Debian package and an AppImage. GitHub Releases also build a Windows executable, installer, and portable ZIP:
 
 ```bash
 packaging/build-deb.sh
@@ -62,6 +62,8 @@ sudo apt install ./suvhlatex_0.1.0_all.deb
 After installation, launch `suvhlatex` from the applications menu. Its projects are stored in your user data directory, not inside the installed package.
 
 The `suvhlatex` Conda environment is cloned from the existing `dsagent` environment. It provides the Python runtime and supporting tools; the LaTeX compilers remain the system TeX Live installation and are available inside the environment.
+
+The Windows installer bundles the Python application and opens the same local browser editor. Install MiKTeX or TeX Live separately for PDF compilation; see [README-WINDOWS.md](README-WINDOWS.md).
 
 If `conda` is not on your shell `PATH`, initialize it once with:
 
