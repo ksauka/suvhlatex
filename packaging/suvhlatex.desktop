@@ -2,7 +2,7 @@
 Name=suvhlatex
 Comment=Local LaTeX editor and PDF compiler
 Exec=suvhlatex
-Icon=accessories-text-editor
+Icon=suvhlatex
 Terminal=false
 Type=Application
 Categories=Office;Publishing;
