@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APPDIR="${APPDIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+export SUVHLATEX_APP_DIR="$APPDIR/usr/share/suvhlatex"
+exec "$APPDIR/usr/share/suvhlatex/installed-launcher.sh" "$@"

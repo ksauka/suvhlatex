@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>suvhlatex — local LaTeX workspace</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">∿</div>
+    <div>
+      <div class="eyebrow">LOCAL DOCUMENT WORKSPACE</div>
+      <h1>suvhlatex</h1>
+    </div>
+    <div class="topbar-actions">
+      <button id="toggle-sidebar" class="button button-quiet panel-toggle" title="Show or hide projects">☰ Projects</button>
+      <span id="security-mode" class="mode-badge">Local only</span>
+      <label class="button button-quiet upload-button">Import ZIP<input id="zip-input" type="file" accept=".zip,application/zip"></label>
+      <button id="clone-repo" class="button button-quiet">Clone Git repo</button>
+      <button id="new-project" class="button button-primary">New project</button>
+      <button id="logout" class="button button-quiet" hidden>Log out</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar panel">
+      <div class="panel-heading">
+        <div>
+          <div class="eyebrow">WORKSPACE</div>
+          <h2>Projects</h2>
+        </div>
+        <div class="heading-actions"><span id="project-count" class="count-pill">0</span><button id="hide-sidebar" class="icon-button" title="Hide projects">×</button></div>
+      </div>
+      <div id="project-list" class="project-list"></div>
+      <div class="sidebar-note">
+        <span class="status-dot"></span>
+        <div><strong>Local-first</strong><br><span>Files stay on this machine.</span></div>
+      </div>
+    </aside>
+
+    <div id="sidebar-resizer" class="resize-handle" title="Drag to resize projects"></div>
+
+    <section class="workspace">
+      <div id="empty-state" class="empty-state panel">
+        <div class="empty-icon">∿</div>
+        <div class="empty-copy">
+          <div class="eyebrow">YOUR NEXT PAPER STARTS HERE</div>
+          <h2>A focused place to write, compile, and keep your source files.</h2>
+          <p>Start from a template or import a LaTeX ZIP exported from another project.</p>
+          <button id="empty-new-project" class="button button-primary">Create your first project</button>
+        </div>
+      </div>
+
+      <div id="editor-view" class="editor-view" hidden>
+        <div class="editor-grid">
+          <section class="file-panel panel">
+            <div class="panel-heading compact">
+              <div><h3>Project files</h3></div>
+              <button id="hide-files" class="icon-button" title="Hide source files">×</button>
+            </div>
+            <div id="file-list" class="file-list"></div>
+            <div class="file-hint">Edit source files directly. Your project remains an ordinary folder on disk.</div>
+          </section>
+          <div id="files-resizer" class="resize-handle" title="Drag to resize source files"></div>
+          <section class="code-panel panel">
+            <div class="code-toolbar">
+              <div class="editor-identity"><strong id="editor-project-name" class="editor-project-name">Project</strong><span class="toolbar-separator">/</span><span id="active-file" class="file-name">main.tex</span><span id="dirty-indicator" class="dirty-indicator"></span></div>
+              <div class="code-toolbar-actions">
+                <label class="toolbar-main-file"><span>Compile</span><select id="main-file-select" aria-label="Compile file"></select></label>
+                <div class="save-group"><span id="save-state" class="save-state"><span class="save-status-dot" aria-hidden="true"></span>All changes saved</span><button id="save-file" class="button button-quiet">Save <kbd>⌘S</kbd></button></div>
+                <button id="compile-project" class="button button-primary"><span class="play">▶</span> Compile PDF</button>
+                <button id="show-files" class="toolbar-button" title="Show source files">Files</button>
+                <button id="show-preview" class="toolbar-button" title="Show PDF preview">PDF</button>
+              </div>
+            </div>
+            <textarea id="code-editor" spellcheck="false" aria-label="LaTeX source editor"></textarea>
+          </section>
+          <div id="preview-resizer" class="resize-handle" title="Drag to resize PDF preview"></div>
+          <section class="preview-panel panel">
+            <div class="preview-toolbar">
+              <div><h3>PDF preview</h3></div>
+              <div class="preview-actions"><a id="download-pdf" class="download-link" href="#" target="_blank" hidden>Open PDF ↗</a><button id="hide-preview" class="icon-button" title="Hide PDF preview">×</button></div>
+            </div>
+            <div id="preview-empty" class="preview-empty"><div class="paper-icon">▤</div><p>Compile the project to see your PDF here.</p></div>
+            <iframe id="pdf-frame" title="Compiled PDF preview" hidden></iframe>
+            <details class="log-details"><summary>Compiler log</summary><pre id="compile-log">No compilation run yet.</pre></details>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="project-context-menu" class="context-menu" hidden>
+    <button id="delete-context-project" class="context-menu-danger">Delete project</button>
+  </div>
+
+  <dialog id="new-project-dialog">
+    <form method="dialog" id="new-project-form">
+      <div class="dialog-heading"><div><div class="eyebrow">NEW PROJECT</div><h2>Choose a starting point</h2></div><button value="cancel" class="close-button" aria-label="Close">×</button></div>
+      <label class="field-label" for="project-name">Project name</label>
+      <input id="project-name" class="text-input" required placeholder="e.g. literature-review-draft">
+      <div class="field-label">Template</div>
+      <div id="template-options" class="template-options"></div>
+      <div class="dialog-actions"><button value="cancel" class="button button-quiet">Cancel</button><button id="create-project" value="default" class="button button-primary">Create project</button></div>
+    </form>
+  </dialog>
+  <dialog id="clone-repo-dialog">
+    <form method="dialog" id="clone-repo-form">
+      <div class="dialog-heading"><div><div class="eyebrow">CONNECT A REPOSITORY</div><h2>Clone a Git repository</h2></div><button value="cancel" class="close-button" aria-label="Close">×</button></div>
+      <label class="field-label" for="repo-url">Repository URL</label>
+      <input id="repo-url" class="text-input" type="url" required placeholder="https://github.com/you/your-paper.git">
+      <label class="field-label" for="repo-name">Workspace name <span class="muted">(optional)</span></label>
+      <input id="repo-name" class="text-input" placeholder="Uses the repository name by default">
+      <p class="dialog-note">The shallow clone is stored in suvhlatex and keeps its <code>.git</code> folder, so you can continue using Git from the repository folder.</p>
+      <div class="dialog-actions"><button value="cancel" class="button button-quiet">Cancel</button><button id="start-clone" value="default" class="button button-primary">Clone repository</button></div>
+    </form>
+  </dialog>
+  <dialog id="auth-dialog">
+    <form id="auth-form">
+      <div class="dialog-heading"><div><div class="eyebrow">PRIVATE WORKSPACE</div><h2>Enter your password</h2></div></div>
+      <p class="dialog-note">This local workspace is protected by the password configured in <code>SUVHLATEX_PASSWORD</code>.</p>
+      <label class="field-label" for="auth-password">Password</label>
+      <input id="auth-password" class="text-input" type="password" required autocomplete="current-password">
+      <div class="dialog-actions"><button class="button button-primary" type="submit">Unlock workspace</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=suvhlatex
+Comment=Local LaTeX editor and PDF compiler
+Exec=__APP_DIR__/run.sh
+Icon=accessories-text-editor
+Terminal=false
+Type=Application
+Categories=Office;Publishing;
