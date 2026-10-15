@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  linux:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out source
@@ -37,10 +37,65 @@ jobs:
           APPIMAGE_RUNTIME_FILE: ${{ github.workspace }}/runtime-x86_64
         run: packaging/build-appimage.sh
 
+      - name: Upload Linux packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            dist/*.deb
+            dist/*.AppImage
+
+  windows:
+    runs-on: windows-2025
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Build Windows executable
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pyinstaller
+          pyinstaller --noconfirm --clean --onefile --windowed --name suvhlatex --paths . --add-data "web;web" packaging/windows/launcher.py
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
+
+      - name: Package Windows releases
+        shell: pwsh
+        run: |
+          $version = (Get-Content pyproject.toml | Select-String 'version = "([^"]+)"').Matches.Groups[1].Value
+          Compress-Archive -Path dist\suvhlatex.exe, README-WINDOWS.md -DestinationPath "dist\suvhlatex-$version-windows-x64.zip" -Force
+          Push-Location packaging\windows
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DMyAppVersion=$version" suvhlatex.iss
+          Pop-Location
+
+      - name: Upload Windows packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-packages
+          path: |
+            dist/*.exe
+            dist/*.zip
+
+  publish:
+    needs: [linux, windows]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download release packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-packages"
+          path: dist
+          merge-multiple: true
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: |
-            dist/*.deb
-            dist/*.AppImage
+          files: dist/*
