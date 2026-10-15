@@ -11,10 +11,10 @@ permissions:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install packaging tools
         run: |
@@ -26,12 +26,12 @@ jobs:
 
       - name: Download AppImage builder
         run: |
-          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
-          chmod +x appimagetool
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool.AppImage
+          chmod +x appimagetool.AppImage
 
       - name: Build AppImage
         env:
-          APPIMAGETOOL: ${{ github.workspace }}/appimagetool
+          APPIMAGETOOL: ${{ github.workspace }}/appimagetool.AppImage
         run: packaging/build-appimage.sh
 
       - name: Publish GitHub release
