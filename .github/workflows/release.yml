@@ -28,10 +28,13 @@ jobs:
         run: |
           wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool.AppImage
           chmod +x appimagetool.AppImage
+          wget -q https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64 -O runtime-x86_64
+          chmod +x runtime-x86_64
 
       - name: Build AppImage
         env:
           APPIMAGETOOL: ${{ github.workspace }}/appimagetool.AppImage
+          APPIMAGE_RUNTIME_FILE: ${{ github.workspace }}/runtime-x86_64
         run: packaging/build-appimage.sh
 
       - name: Publish GitHub release
