@@ -6,6 +6,11 @@ DIST_DIR="${DIST_DIR:-$ROOT_DIR/dist}"
 VERSION="${SUVHLATEX_VERSION:-$(sed -n 's/^version = "\([^"]*\)"/\1/p' "$ROOT_DIR/pyproject.toml")}" 
 APPDIR="$DIST_DIR/suvhlatex.AppDir"
 APPIMAGETOOL="${APPIMAGETOOL:-$(command -v appimagetool || true)}"
+APPIMAGETOOL_ARGS=()
+
+if [[ "$APPIMAGETOOL" == *.AppImage ]]; then
+  APPIMAGETOOL_ARGS=(--appimage-extract-and-run)
+fi
 
 if [[ -z "$APPIMAGETOOL" ]]; then
   echo "appimagetool is required. Set APPIMAGETOOL or install it before building." >&2
@@ -22,6 +27,6 @@ install -m 755 "$ROOT_DIR/packaging/installed-launcher.sh" "$APPDIR/usr/share/su
 install -m 644 "$ROOT_DIR/packaging/suvhlatex.desktop" "$APPDIR/usr/share/applications/suvhlatex.desktop"
 
 mkdir -p "$DIST_DIR"
-"$APPIMAGETOOL" "$APPDIR" "$DIST_DIR/suvhlatex-${VERSION}-x86_64.AppImage"
+"$APPIMAGETOOL" "${APPIMAGETOOL_ARGS[@]}" "$APPDIR" "$DIST_DIR/suvhlatex-${VERSION}-x86_64.AppImage"
 rm -rf "$APPDIR"
 echo "Created $DIST_DIR/suvhlatex-${VERSION}-x86_64.AppImage"
