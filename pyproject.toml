@@ -1,6 +1,6 @@
 [project]
 name = "suvhlatex"
-version = "0.1.4"
+version = "0.1.5"
 description = "Local browser-based LaTeX project editor and PDF compiler"
 requires-python = ">=3.10"
 

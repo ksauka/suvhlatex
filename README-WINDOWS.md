@@ -4,6 +4,8 @@ The Windows package starts the local suvhlatex server and opens the editor in yo
 
 `%LOCALAPPDATA%\suvhlatex\data`
 
+Run the Windows installer for each new release. It detects the existing suvhlatex installation, replaces the application in the same folder, and preserves your projects and settings. Close the app before updating, or let the installer close and restart it automatically.
+
 PDF compilation requires a Windows LaTeX distribution. Install either:
 
 - [MiKTeX](https://miktex.org/download), or

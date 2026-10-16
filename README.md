@@ -61,6 +61,8 @@ sudo apt install ./suvhlatex_0.1.0_all.deb
 
 After installation, launch `suvhlatex` from the applications menu. Its projects are stored in your user data directory, not inside the installed package.
 
+To update an existing installation, install the newer release over it. Debian packages use the same package name and Windows installers use the same application identity, so the application files are replaced in place while user projects and settings remain in the user data directory. AppImage and portable ZIP downloads are standalone files and must be replaced manually.
+
 The `suvhlatex` Conda environment is cloned from the existing `dsagent` environment. It provides the Python runtime and supporting tools; the LaTeX compilers remain the system TeX Live installation and are available inside the environment.
 
 The Windows installer bundles the Python application and opens the same local browser editor. Install MiKTeX or TeX Live separately for PDF compilation; see [README-WINDOWS.md](README-WINDOWS.md).
