@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 build/
 *.spec
+packaging/suvhlatex.ico
 .venv/
 .env
 config.json

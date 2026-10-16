@@ -1,6 +1,6 @@
 #define MyAppName "suvhlatex"
 #ifndef MyAppVersion
-  #define MyAppVersion "0.1.3"
+  #define MyAppVersion "0.1.4"
 #endif
 
 [Setup]
@@ -10,6 +10,7 @@ AppVersion={#MyAppVersion}
 AppPublisher=suvhlatex contributors
 DefaultDirName={localappdata}\Programs\suvhlatex
 DefaultGroupName={#MyAppName}
+SetupIconFile=..\suvhlatex.ico
 OutputDir=..\..\dist
 OutputBaseFilename=suvhlatex-{#MyAppVersion}-windows-x64-setup
 Compression=lzma
