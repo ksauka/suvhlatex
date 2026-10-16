@@ -1,0 +1,14 @@
+[Unit]
+Description=Cloudflare Tunnel for suvhlatex
+After=network-online.target suvhlatex.service
+Wants=network-online.target suvhlatex.service
+
+[Service]
+Type=simple
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/env cloudflared tunnel --no-autoupdate run --token-file %h/.config/suvhlatex/tunnel.token
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

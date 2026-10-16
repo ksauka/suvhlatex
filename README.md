@@ -128,6 +128,13 @@ Container mode uses the `texlive/texlive:latest` image by default. Override it w
 
 `SUVHLATEX_COMPILE_MODE=auto` uses a container when Docker/Podman is available and otherwise falls back to the local LaTeX engine. The local mode is convenient for development but is not a security boundary for untrusted LaTeX source.
 
+## Cloudflare access and two-machine failover
+
+For a stable private hostname such as `latex.aitheoryelaboration.org`, see
+[docs-CLOUDFLARE-FAILOVER.md](docs-CLOUDFLARE-FAILOVER.md). It documents the
+named Cloudflare Tunnel, Access protection, Linux services, and the active /
+standby project synchronization model used for the desktop and laptop.
+
 ## Tests
 
 ```bash

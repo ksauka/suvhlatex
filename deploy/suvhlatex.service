@@ -1,0 +1,17 @@
+[Unit]
+Description=suvhlatex local LaTeX workspace
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+Environment=SUVHLATEX_APP_ROOT=%h/projects/suvhlatex
+EnvironmentFile=-%h/.config/suvhlatex/.env
+ExecStart=%h/projects/suvhlatex/deploy/start-server.sh
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target
