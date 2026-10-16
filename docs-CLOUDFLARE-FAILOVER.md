@@ -1,38 +1,31 @@
-# Cloudflare and two-machine failover
+# Cloudflare Quick Tunnel and two-machine failover
 
-This setup keeps `suvhlatex` available at a stable Cloudflare hostname while
-the desktop or laptop is running. It follows the active/standby model used by
-the ETV_V2 deployment.
+The current setup exposes `suvhlatex` through a Cloudflare Quick Tunnel. This
+does not use the institutional Cloudflare account, a domain, or a tunnel
+token. It follows the same local-service pattern used by `indlu`.
+
+When you later move away from the institution, the Quick Tunnel can be
+replaced with the named-tunnel service included in this repository.
 
 ## Target layout
 
 ```text
-https://latex.aitheoryelaboration.org
+https://random-words.trycloudflare.com
               |
-       Cloudflare Tunnel: suvhlatex
-              |
-     desktop primary / laptop standby
+       Cloudflare Quick Tunnel
               |
         http://127.0.0.1:8765
 ```
 
-The hostname is a separate subdomain. It does not change the existing ETV
-site at `aitheoryelaboration.org`.
+The URL is printed by `cloudflared` and is also available in the service log:
 
-## Cloudflare dashboard
+```bash
+journalctl --user -u suvhlatex-cloudflared.service --no-pager | grep trycloudflare
+```
 
-In the Cloudflare account that manages `aitheoryelaboration.org`:
-
-1. Create a remotely managed tunnel named `suvhlatex`.
-2. Add a published application route.
-3. Choose the hostname `latex.aitheoryelaboration.org`.
-4. Set the service URL to `http://127.0.0.1:8765`.
-5. Add a Cloudflare Access policy allowing only your email address.
-6. Copy the connector install token, but do not put it in Git.
-
-Cloudflare requires a domain on the account for a permanent published
-hostname. Multiple connectors can use the same named tunnel, but this app
-uses active/standby operation so that project writes remain consistent.
+The URL changes when the tunnel restarts. A second machine running its own
+Quick Tunnel receives a different URL; Quick Tunnels therefore do not provide
+one shared failover address.
 
 ## Prepare each Linux machine
 
@@ -41,18 +34,6 @@ Install `cloudflared`, then create the private configuration directory:
 ```bash
 mkdir -p ~/.config/suvhlatex
 chmod 700 ~/.config/suvhlatex
-```
-
-Save the Cloudflare connector token in:
-
-```text
-~/.config/suvhlatex/tunnel.token
-```
-
-Then protect it:
-
-```bash
-chmod 600 ~/.config/suvhlatex/tunnel.token
 ```
 
 Create `~/.config/suvhlatex/.env` with a strong password and isolated
@@ -78,17 +59,10 @@ systemctl --user daemon-reload
 systemctl --user enable --now suvhlatex.service
 ```
 
-Enable `suvhlatex-cloudflared.service` only on the current primary machine
-until project synchronization and promotion checks are configured:
+Enable `suvhlatex-cloudflared.service` on the machine you want to expose:
 
 ```bash
 systemctl --user enable --now suvhlatex-cloudflared.service
-```
-
-On the standby machine, install the service but leave the tunnel disabled:
-
-```bash
-systemctl --user disable --now suvhlatex-cloudflared.service 2>/dev/null || true
 ```
 
 ## Project synchronization
@@ -107,8 +81,9 @@ Do not run both app instances as independent writers. Cloudflare can route to
 multiple tunnel connectors, but that does not merge two separate project
 directories.
 
-The automatic promotion watchdog should be installed from the local
-`etv-ops` failover tooling after the two hostnames and data paths are known.
+The automatic promotion watchdog should only be installed after migrating to
+a named Cloudflare Tunnel. With Quick Tunnels, each machine has a different
+public URL, so there is no single URL for the watchdog to preserve.
 Its responsibilities are:
 
 - keep the primary tunnel active during normal operation;
@@ -116,6 +91,15 @@ Its responsibilities are:
 - promote the standby after repeated primary failures;
 - stop the standby tunnel when the primary returns; and
 - synchronize any new standby changes before handing control back.
+
+## Later migration to a stable domain
+
+When the institutional Cloudflare account is no longer needed, create a named
+tunnel for a domain you control. Install
+`deploy/suvhlatex-cloudflared-named.service` instead of the Quick Tunnel
+service, place its token at `~/.config/suvhlatex/tunnel.token`, and configure
+the public hostname in Cloudflare. At that point the desktop and laptop can
+share one stable hostname and use active/standby failover.
 
 ## Verification
 
