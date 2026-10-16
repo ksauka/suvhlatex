@@ -1,6 +1,6 @@
 #define MyAppName "suvhlatex"
 #ifndef MyAppVersion
-  #define MyAppVersion "0.1.5"
+  #define MyAppVersion "0.1.6"
 #endif
 
 [Setup]
@@ -34,3 +34,15 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 
 [Run]
 Filename: "{app}\suvhlatex.exe"; Description: "Launch suvhlatex"; Flags: nowait postinstall skipifsilent
+
+[Code]
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+var
+  ResultCode: Integer;
+begin
+  Result := '';
+  { The packaged launcher hosts the server in the same process as suvhlatex.exe.
+    Stop it explicitly so Windows releases the executable before replacement. }
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /T /IM suvhlatex.exe', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  Sleep(500);
+end;
