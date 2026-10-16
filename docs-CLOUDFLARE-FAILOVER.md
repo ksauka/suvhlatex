@@ -27,6 +27,28 @@ The URL changes when the tunnel restarts. A second machine running its own
 Quick Tunnel receives a different URL; Quick Tunnels therefore do not provide
 one shared failover address.
 
+## Start automatically whenever WSL is running
+
+This is the same pattern used by `indlu`. First make sure systemd is enabled
+inside the WSL distribution. In `/etc/wsl.conf`, use:
+
+```ini
+[boot]
+systemd=true
+```
+
+After restarting WSL from Windows, create the private app configuration as
+described below, then run this once from the repository:
+
+```bash
+bash deploy/install-wsl-services.sh
+```
+
+The installer enables user lingering and starts both services. From then on,
+when this WSL distribution is running, the LaTeX app and its Quick Tunnel run
+without an open terminal. It does not start WSL itself if Windows has stopped
+the distribution; it starts the services as soon as WSL starts.
+
 ## Prepare each Linux machine
 
 Install `cloudflared`, then create the private configuration directory:
@@ -49,7 +71,8 @@ SUVHLATEX_DATA=/home/suvh/projects/suvhlatex/data
 
 Docker or Podman must be installed on each machine for container compilation.
 
-Install the user services:
+The installer above installs and enables the user services. If you prefer to
+install them manually:
 
 ```bash
 mkdir -p ~/.config/systemd/user
