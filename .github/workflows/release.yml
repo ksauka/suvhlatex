@@ -56,11 +56,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Windows icon tooling
+        shell: pwsh
+        run: choco install imagemagick --no-progress -y
+
       - name: Build Windows executable
         shell: pwsh
         run: |
+          magick packaging/suvhlatex.svg -background none -define icon:auto-resize=256,128,64,48,32,16 packaging/suvhlatex.ico
           python -m pip install --upgrade pyinstaller
-          pyinstaller --noconfirm --clean --onefile --windowed --name suvhlatex --paths . --add-data "web;web" packaging/windows/launcher.py
+          pyinstaller --noconfirm --clean --onefile --windowed --icon packaging/suvhlatex.ico --name suvhlatex --paths . --add-data "web;web" packaging/windows/launcher.py
 
       - name: Install Inno Setup
         shell: pwsh
