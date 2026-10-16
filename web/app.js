@@ -237,6 +237,7 @@ async function importZip(file) {
 }
 
 async function cloneRepository(event) {
+  if (event.submitter?.value === "cancel") return;
   event.preventDefault();
   const url = $("#repo-url").value.trim();
   const name = $("#repo-name").value.trim();

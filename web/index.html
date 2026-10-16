@@ -97,23 +97,23 @@
 
   <dialog id="new-project-dialog">
     <form method="dialog" id="new-project-form">
-      <div class="dialog-heading"><div><div class="eyebrow">NEW PROJECT</div><h2>Choose a starting point</h2></div><button value="cancel" class="close-button" aria-label="Close">×</button></div>
+      <div class="dialog-heading"><div><div class="eyebrow">NEW PROJECT</div><h2>Choose a starting point</h2></div><button value="cancel" formnovalidate class="close-button" aria-label="Close">×</button></div>
       <label class="field-label" for="project-name">Project name</label>
       <input id="project-name" class="text-input" required placeholder="e.g. literature-review-draft">
       <div class="field-label">Template</div>
       <div id="template-options" class="template-options"></div>
-      <div class="dialog-actions"><button value="cancel" class="button button-quiet">Cancel</button><button id="create-project" value="default" class="button button-primary">Create project</button></div>
+      <div class="dialog-actions"><button value="cancel" formnovalidate class="button button-quiet">Cancel</button><button id="create-project" value="default" class="button button-primary">Create project</button></div>
     </form>
   </dialog>
   <dialog id="clone-repo-dialog">
     <form method="dialog" id="clone-repo-form">
-      <div class="dialog-heading"><div><div class="eyebrow">CONNECT A REPOSITORY</div><h2>Clone a Git repository</h2></div><button value="cancel" class="close-button" aria-label="Close">×</button></div>
+      <div class="dialog-heading"><div><div class="eyebrow">CONNECT A REPOSITORY</div><h2>Clone a Git repository</h2></div><button value="cancel" formnovalidate class="close-button" aria-label="Close">×</button></div>
       <label class="field-label" for="repo-url">Repository URL</label>
       <input id="repo-url" class="text-input" type="url" required placeholder="https://github.com/you/your-paper.git">
       <label class="field-label" for="repo-name">Workspace name <span class="muted">(optional)</span></label>
       <input id="repo-name" class="text-input" placeholder="Uses the repository name by default">
       <p class="dialog-note">The shallow clone is stored in suvhlatex and keeps its <code>.git</code> folder, so you can continue using Git from the repository folder.</p>
-      <div class="dialog-actions"><button value="cancel" class="button button-quiet">Cancel</button><button id="start-clone" value="default" class="button button-primary">Clone repository</button></div>
+      <div class="dialog-actions"><button value="cancel" formnovalidate class="button button-quiet">Cancel</button><button id="start-clone" value="default" class="button button-primary">Clone repository</button></div>
     </form>
   </dialog>
   <dialog id="auth-dialog">
